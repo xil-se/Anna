@@ -1,0 +1,4 @@
+config.ini
+*.pyc
+__pycache*
+db.sq3
