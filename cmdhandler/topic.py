@@ -17,13 +17,13 @@ class topic:
 
         self.bot = bot
         bot.register_help('topic',
-            'Updates the topic from a template',
+            'updates the topic from a template',
             'usage: !topic')
         bot.register_help('template',
-            'Sets topic template',
+            'sets topic template',
             'usage: !template <template>')
         bot.register_help('gettmp',
-            'Outputs the current template',
+            'outputs the current template',
             'usage: !gettmp')
 
         self.update_topics()
