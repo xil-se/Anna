@@ -2,7 +2,7 @@
 
 
 class load():
-    def __init__(self, event):
+    def __init__(self, bot):
         '''
         This is where all the handlers are importet and run on upstart.
         '''
@@ -15,8 +15,8 @@ class load():
             topic
         )
 
-        headsup.headsup(event)
-        help.help(event)
-        shrug.shrug(event)
-        slap.slap(event)
-        topic.topic(event)
+        headsup.headsup(bot)
+        help.help(bot)
+        shrug.shrug(bot)
+        slap.slap(bot)
+        topic.topic(bot)

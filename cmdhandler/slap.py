@@ -1,13 +1,13 @@
 class slap:
-    def __init__(self, event):
+    def __init__(self, bot):
         '''
         Register the command and the help.
         Also seed some randomness.
         '''
         import random
-        event.add_event_handler("slap", self.muc_slap)
-        self.event = event
-        event.register_help('slap',
+        bot.add_event_handler("slap", self.muc_slap)
+        self.bot = bot
+        bot.register_help('slap',
             'slaps a user in the room',
             'usage: !slap user')
 
@@ -15,7 +15,7 @@ class slap:
         '''
         Simple generator that will return a random int.
         '''
-        random = self.event.random
+        random = self.bot.random
         while True:
             yield random.randint(0, mn)
 
@@ -26,7 +26,7 @@ class slap:
         '''
         cmd = msg[0]
         msg = msg[1]
-        self.nick = self.event.config['rooms'][msg['from'].bare]['nick']
+        self.nick = self.bot.config['rooms'][msg['from'].bare]['nick']
         slaps = [
             ' large trout',
             ' slimy toad',
@@ -47,6 +47,6 @@ class slap:
             victim = msg['body']
 
         c = next(self.randnumber(len(slaps) - 1))
-        self.event.send_message(mto=msg['from'].bare,
+        self.bot.send_message(mto=msg['from'].bare,
             mbody="/me slaps %s with a%s!" % (victim, slaps[c]),
             mtype='groupchat')

@@ -2,27 +2,27 @@ import sqlite3
 
 
 class topic:
-    def __init__(self, event):
+    def __init__(self, bot):
         #self.template_topic = {}
         self.old_topic = {}
         '''
-        register the event for "topic" and make the "event" availeble in self.event.
+        register the event for "topic" and make the "event" available in self.bot.
         '''
-        event.add_event_handler("topic", self.muc_topic)
-        event.add_event_handler("template", self.muc_update_template)
-        event.add_event_handler("gettmp", self.muc_get_template)
-        event.add_event_handler("groupchat_subject", self.set_old_topic)
+        bot.add_event_handler("topic", self.muc_topic)
+        bot.add_event_handler("template", self.muc_update_template)
+        bot.add_event_handler("gettmp", self.muc_get_template)
+        bot.add_event_handler("groupchat_subject", self.set_old_topic)
 
-        event.schedule("Topic Fetch", 3600, self.update_topics, repeat=True)
+        bot.schedule("Topic Fetch", 3600, self.update_topics, repeat=True)
 
-        self.event = event
-        event.register_help('topic',
+        self.bot = bot
+        bot.register_help('topic',
             'Updates the topic from a template',
             'usage: !topic')
-        event.register_help('template',
+        bot.register_help('template',
             'Sets topic template',
             'usage: !template <template>')
-        event.register_help('gettmp',
+        bot.register_help('gettmp',
             'Outputs the current template',
             'usage: !gettmp')
 
@@ -154,7 +154,7 @@ class topic:
         '''
         functiont to change a muc's topic
         '''
-        msg = self.event.make_message(jid)
+        msg = self.bot.make_message(jid)
         msg['type'] = 'groupchat'
         msg['subject'] = topic
         msg.send()
@@ -164,14 +164,14 @@ class topic:
         jid = msg['from'].bare
         db = sqlite3.connect('db.sq3')
         c = db.execute('SELECT template from topic where room_name = ?', [jid])
-        self.event.send_message(mto=jid,
+        self.bot.send_message(mto=jid,
             mbody=c.fetchone(),
             mtype='groupchat')
         db.close()
 
     def muc_update_template(self, msg):
         '''
-        This function will change the topic of the muc uppon event.
+        This function will change the topic of the muc uppon bot.
         '''
         msg = msg[1]
         jid = msg['from'].bare
