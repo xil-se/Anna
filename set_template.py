@@ -9,5 +9,5 @@ jid = sys.argv[1]
 
 data = sys.stdin.readlines()
 
-print ("".join(data))
-print (jid)
+print("".join(data))
+print(jid)
