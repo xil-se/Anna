@@ -11,5 +11,5 @@
 #### Config file
 Copy `config.example.ini` to `config.ini` and edit it to your liking.
 
-#### Run the bot:
+#### Run the bot
 	python3 mucbot.py
