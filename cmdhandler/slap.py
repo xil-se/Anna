@@ -5,6 +5,12 @@ class slap:
         Also seed some randomness.
         '''
         import random
+
+        self.slaps = []
+        with open('slaps.txt') as f:
+            for line in f.readlines():
+                self.slaps.append(line[:-1])  # strip new line
+
         bot.add_event_handler("slap", self.muc_slap)
         self.bot = bot
         bot.register_help('slap',
@@ -27,16 +33,6 @@ class slap:
         cmd = msg[0]
         msg = msg[1]
         self.nick = self.bot.config['rooms'][msg['from'].bare]['nick']
-        slaps = [
-            ' large trout',
-            ' slimy toad',
-            ' small car',
-            'n angry weasel',
-            ' problematic customer',
-            'n overpriced iPad',
-            ' pile of overpriced Windows licenses',
-            'n overheated Xbox 360'
-        ]
 
         is_master = msg['body'].lower() in self.bot.masters
         is_self = self.nick in msg['body']
@@ -47,7 +43,7 @@ class slap:
         else:
             victim = msg['body']
 
-        c = next(self.randnumber(len(slaps) - 1))
+        c = next(self.randnumber(len(self.slaps) - 1))
         self.bot.send_message(mto=msg['from'].bare,
-            mbody="/me slaps %s with a%s!" % (victim, slaps[c]),
+            mbody="/me slaps %s with %s!" % (victim, self.slaps[c]),
             mtype='groupchat')
