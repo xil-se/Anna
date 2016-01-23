@@ -181,7 +181,7 @@ class MUCBot(sleekxmpp.ClientXMPP):
         """
         self.nick = self.config['rooms'][msg['from'].bare]['nick']
         if msg['mucnick']:
-            is_master = msg['mucnick'] in self.masters
+            is_master = msg['mucnick'].lower() in self.masters
             is_self = msg['mucnick'] != self.nick
 
             if is_master and self.nick in msg['body']:
