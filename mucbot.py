@@ -69,6 +69,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
         # load all the handlers!
         handlers.load(self, all_handlers)
 
+        # load a list of mention replies
+        self.replies = []
+        with open('replies.txt') as f:
+            for line in f.readlines():
+                self.replies.append(line[:-1])  # strip new line
+
         # The groupchat_message event is triggered whenever a message
         # stanza is received from any chat room. If you also also
         # register a handler for the 'message' event, MUC messages
@@ -167,28 +173,19 @@ class MUCBot(sleekxmpp.ClientXMPP):
                    for stanza objects and the Message stanza to see
                    how it may be used.
         """
-        replies = [
-            "Don't mention the war.",
-            "I'm not that into Pokemon",
-            "I won't even comment on that.",
-            "That sounds interesting. Tell me more.",
-            "Did you know that mongoDB is webscale?",
-            "I think there is an app for that.",
-            "Did you know that the bird is greater than or equal to the Word?",
-            "Is that some kind of javascript framework?",
-            "Pics or it didn't happen!",
-            "What if i told you that i am not a bo(a)t?"
-        ]
         self.nick = self.config['rooms'][msg['from'].bare]['nick']
         if msg['mucnick']:
-            if msg['mucnick'] == 'David' and self.nick in msg['body']:
+            is_david = msg['mucnick'] == 'David'
+            is_self = msg['mucnick'] != self.nick
+            
+            if is_david and self.nick in msg['body']:
                 self.send_message(mto=msg['from'].bare,
                     mbody="Yes sir!",
                     mtype='groupchat')
-            elif msg['mucnick'] != self.nick and self.nick in msg['body']:
-                reply = replies[self.random.randint(1, len(replies)) - 1]
+            elif is_self and self.nick in msg['body']:
+                reply = self.replies[self.random.randint(1, len(self.replies)) - 1]
                 self.send_message(mto=msg['from'].bare,
-                    mbody="%s, %s" % (msg['mucnick'], reply),
+                    mbody="%s: %s" % (msg['mucnick'], reply),
                     mtype='groupchat')
 
 
