@@ -2,21 +2,17 @@
 
 
 class load():
-    def __init__(self, bot):
+    def __init__(self, bot, handler_list):
         '''
-        This is where all the handlers are importet and run on upstart.
+        This is where all the handlers are imported and initialized on upstart
         '''
-        # keep in alphabetical order
-        from cmdhandler import (
-            headsup,
-            help,
-            shrug,
-            slap,
-            topic
-        )
 
-        headsup.headsup(bot)
-        help.help(bot)
-        shrug.shrug(bot)
-        slap.slap(bot)
-        topic.topic(bot)
+        cmdmodule = __import__("cmdhandler", fromlist=handler_list)
+        for handler in handler_list:
+            try:
+                handler_module = getattr(cmdmodule, handler)
+                handler_class = getattr(handler_module, handler)
+
+                bot.handlers[handler] = handler_class(bot)
+            except AttributeError:
+                print("WARNING  Failed to load handler %s" % handler)

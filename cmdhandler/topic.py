@@ -3,14 +3,11 @@ import sqlite3
 
 class topic:
     def __init__(self, bot):
-        #self.template_topic = {}
         self.old_topic = {}
         '''
         register the event for "topic" and make the "event" available in self.bot.
         '''
         bot.add_event_handler("topic", self.muc_topic)
-        bot.add_event_handler("template", self.muc_update_template)
-        bot.add_event_handler("gettmp", self.muc_get_template)
         bot.add_event_handler("groupchat_subject", self.set_old_topic)
 
         bot.schedule("Topic Fetch", 3600, self.update_topics, repeat=True)
@@ -19,9 +16,6 @@ class topic:
         bot.register_help('topic',
             'updates the topic from a template',
             'usage: !topic')
-        bot.register_help('template',
-            'sets topic template',
-            'usage: !template <template>')
         bot.register_help('gettmp',
             'outputs the current template',
             'usage: !gettmp')
@@ -67,13 +61,6 @@ class topic:
 
     def isup(self, url):
         try:
-            #import httplib
-            #from urlparse import urlparse
-            #p = urlparse(url)
-
-            #conn = httplib.HTTPConnection(p.netloc, timeout=1)
-            #conn.request('HEAD', p.path)
-            #resp = conn.getresponse()
             import requests
             resp = requests.head(url)
             print("Url: %s has status: %s" % (url, resp.status_code))
@@ -83,19 +70,6 @@ class topic:
             print("sad panda request: %s" % url)
 
         return "No."
-
-#    def days_until(self, date):
-#        from datetime import datetime
-#
-#        try:
-#            d1 = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-#            days = int((round((d1 - datetime.now() ).days, 0)))
-#            if days <= 0:
-#                return 0
-#
-#            return days
-#        except:
-#            return "0"
 
     def days_until(self, date):
         from datetime import datetime
@@ -158,36 +132,6 @@ class topic:
         msg['type'] = 'groupchat'
         msg['subject'] = topic
         msg.send()
-
-    def muc_get_template(self, msg):
-        msg = msg[1]
-        jid = msg['from'].bare
-        db = sqlite3.connect('db.sq3')
-        c = db.execute('SELECT template from topic where room_name = ?', [jid])
-        self.bot.send_message(mto=jid,
-            mbody=c.fetchone(),
-            mtype='groupchat')
-        db.close()
-
-    def muc_update_template(self, msg):
-        '''
-        This function will change the topic of the muc uppon bot.
-        '''
-        msg = msg[1]
-        jid = msg['from'].bare
-        #self.template_topic[jid] = msg['body']
-
-        db = sqlite3.connect('db.sq3')
-        db.execute('REPLACE INTO topic (room_name, template) VALUES (?,?)',
-            (jid, msg['body']))
-        db.commit()
-        db.close()
-
-        self.update_topics()
-
-        #topic = self.render_template(self.template_topic[jid])
-
-        #self.change_topic(jid,topic)
 
     def muc_topic(self, msg):
         self.update_topics()

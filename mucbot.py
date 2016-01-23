@@ -52,7 +52,23 @@ class MUCBot(sleekxmpp.ClientXMPP):
         self.add_event_handler("session_start", self.start)
 
         self.help = {}
-        handlers.load(self)
+        self.handlers = {}
+
+        # create a list of all enabled handlers in all rooms
+        all_handlers = []
+        for i in self.config['rooms']:
+            room = self.config['rooms'][i]
+            if 'enabled-handlers' not in room:
+                continue
+
+            all_handlers = all_handlers + room['enabled-handlers']
+
+        # remove duplicates
+        all_handlers = list(set(all_handlers))
+
+        # load all the handlers!
+        handlers.load(self, all_handlers)
+
         # The groupchat_message event is triggered whenever a message
         # stanza is received from any chat room. If you also also
         # register a handler for the 'message' event, MUC messages
