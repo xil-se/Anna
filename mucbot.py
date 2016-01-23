@@ -75,6 +75,12 @@ class MUCBot(sleekxmpp.ClientXMPP):
             for line in f.readlines():
                 self.replies.append(line[:-1])  # strip new line
 
+        # load a list of masters
+        self.masters = []
+        with open('masters.txt') as f:
+            for line in f.readlines():
+                self.masters.append(line[:-1].lower())  # strip new line
+
         # The groupchat_message event is triggered whenever a message
         # stanza is received from any chat room. If you also also
         # register a handler for the 'message' event, MUC messages
@@ -175,10 +181,10 @@ class MUCBot(sleekxmpp.ClientXMPP):
         """
         self.nick = self.config['rooms'][msg['from'].bare]['nick']
         if msg['mucnick']:
-            is_david = msg['mucnick'] == 'David'
+            is_master = msg['mucnick'] in self.masters
             is_self = msg['mucnick'] != self.nick
-            
-            if is_david and self.nick in msg['body']:
+
+            if is_master and self.nick in msg['body']:
                 self.send_message(mto=msg['from'].bare,
                     mbody="Yes sir!",
                     mtype='groupchat')

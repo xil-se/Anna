@@ -38,11 +38,12 @@ class slap:
             'n overheated Xbox 360'
         ]
 
-        is_simon = 'Simon' in msg['body']
-        is_david = 'david' in msg['body']
+        is_master = msg['body'].lower() in self.bot.masters
         is_self = self.nick in msg['body']
-        if (is_simon or is_david) or (is_self and not is_simon):
+        if is_master or (is_self and not is_master):
             victim = msg['mucnick']
+        elif msg['body'] == '':
+            victim = "someone"
         else:
             victim = msg['body']
 
