@@ -3,7 +3,7 @@
 ### Installation
 
 #### Install python3 packages
-    pip3 install sleekxmpp configobj
+    pip3 install sleekxmpp configobj jinja2
 
 #### Set up the database
     sqlite3 db.sq3 < db.sql
