@@ -6,9 +6,17 @@ class load():
         '''
         This is where all the handlers are importet and run on upstart.
         '''
-        from cmdhandler import headsup, slap, topic, help
+        # keep in alphabetical order
+        from cmdhandler import (
+            headsup,
+            help,
+            shrug,
+            slap,
+            topic
+        )
 
         headsup.headsup(event)
+        help.help(event)
+        shrug.shrug(event)
         slap.slap(event)
         topic.topic(event)
-        help.help(event)
