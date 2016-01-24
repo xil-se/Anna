@@ -8,13 +8,11 @@ class trace:
 
     def trace(self, host):
         import subprocess
-        import locale
 
         args = ['mtr', host, '--report-wide', '-c', '1']
         proc = subprocess.Popen(args, stdout=subprocess.PIPE)
         out, err = proc.communicate()
-        enc = locale.getdefaultlocale()[1]
-        out = out.decode(enc)
+        out = out.decode("UTF-8")
 
         lines = out.split('\n')
         if len(lines) > 11:
