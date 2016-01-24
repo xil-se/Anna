@@ -73,20 +73,19 @@ class topic:
 
     def days_until(self, date):
         from datetime import datetime
+        from utils import utils
 
         try:
-            d1 = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
-            dt = (d1 - datetime.now())
+            as_datetime = datetime.strptime(date, "%Y-%m-%d %H:%M:%S")
+            delta = as_datetime - datetime.now()
 
-            if dt.days < 0:
-                return "Nononono"
+            if delta.days < 0:
+                return "the past"
 
-            if dt.days == 0:
-                h = divmod(dt.seconds, 3600)
-                m = divmod(h[1], 60)
-                return "%d days, %d hours, %d minutes" % (dt.days, h[0], m[0])
+            if delta.days == 0:
+                return utils.delta_string(delta, show_seconds=False)
             else:
-                return "%d days" % dt.days
+                return "%d days" % delta.days
         except e:
             return "dunno"
 
