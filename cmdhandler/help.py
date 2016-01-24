@@ -15,23 +15,26 @@ class help:
         Function to output the apropriate help.
         '''
         msg = msg[1]  # redefine message to lose the command
+        body = ''
+        # no exception below because help would not work if enabled-handlers was undefined
         enable_handlers = self.bot.config['rooms'][msg['from'].bare]['enabled-handlers']
-        try:
-            if not msg['body'] == '':
+        if not msg['body'] == '':
+            # output help for the requested command
+            if msg['body'] in enable_handlers:
                 help = self.bot.help[msg['body']]
-                # check if no command for help was supplied and output general help
-                if msg['body'] in enable_handlers or msg['body'] == 'help':
-                    self.bot.send_message(mto=msg['from'].bare,
-                        mbody="\n%s:\n %s \n     %s" % (msg['body'], help[0], help[1]),
-                        mtype='groupchat')
-            else:  # output help for the command asked for
-                ans = '\nCommands: \n'
-                for i in self.bot.help:
-                    if i in enable_handlers or i == 'help':
-                        ans = "%s    %s - %s\n" % (ans, i, self.bot.help[i][0])
+                body = "\n%s:\n %s \n     %s" % (msg['body'], help[0], help[1])
+            else:
+                body = "Command not found"
+        else:
+            # output general help
+            body = "\nTo get details about a specific command, use !help <command>\n"
+            body = body + "Commands: \n"
+            for i in sorted(self.bot.help):
+                if i in enable_handlers:
+                    body = "%s    %s - %s\n" % (body, i, self.bot.help[i][0])
 
-                self.bot.send_message(mto=msg['from'].bare,
-                    mbody=ans[:-1],
-                    mtype='groupchat')
-        except:
-            pass
+            body = body[:-1]
+
+        self.bot.send_message(mto=msg['from'].bare,
+            mbody=body,
+            mtype='groupchat')
