@@ -17,11 +17,15 @@ class headsup:
         cmd = msg[0]
         msg = msg[1]
         self.nick = self.bot.config['rooms'][msg['from'].bare]['nick']
-        users = ''
-        for i in self.bot.plugin['xep_0045'].getRoster(msg['from'].bare):
-            if i != (self.nick or msg['mucknick']):
-                users = users + i + ', '
+        users = []
+        for user in self.bot.plugin['xep_0045'].getRoster(msg['from'].bare):
+            if user != (self.nick or msg['mucknick']):
+                users.append(user)
+
+        body = ', '.join(users)
+        if msg['body'].strip() != '':
+            body = body + ": See above!"
 
         self.bot.send_message(mto=msg['from'].bare,
-            mbody="%s See above!" % users,
+            mbody=body,
             mtype='groupchat')
