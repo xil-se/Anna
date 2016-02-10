@@ -85,7 +85,7 @@ class topic:
             if delta.days == 0:
                 return utils.delta_string(delta, show_seconds=False)
             else:
-                return "%d days" % delta.days
+                return "%d day%s" % (delta.days, "" if delta.days == 1 else "s")
         except e:
             return "dunno"
 
