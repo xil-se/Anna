@@ -33,15 +33,14 @@ class slap:
         cmd = msg[0]
         msg = msg[1]
         self.nick = self.bot.config['rooms'][msg['from'].bare]['nick']
-
-        is_master = msg['body'].lower() in self.bot.masters
-        is_self = self.nick in msg['body']
+	
+        victim = msg['body'].strip()
+        is_master = victim.lower() in self.bot.masters
+        is_self = self.nick in victim
         if is_master or (is_self and not is_master):
             victim = msg['mucnick']
         elif msg['body'] == '':
             victim = "someone"
-        else:
-            victim = msg['body']
 
         c = next(self.randnumber(len(self.slaps) - 1))
         self.bot.send_message(mto=msg['from'].bare,
