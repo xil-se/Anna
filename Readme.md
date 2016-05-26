@@ -19,3 +19,7 @@ Copy `config.example.ini` to `config.ini` and edit it to your liking.
 
 #### Run the bot
 	python3 mucbot.py
+
+
+#### Security notes:
+Its possible to access __class__.__base__.__subclasses__.... on the functions passed to the template. Disable topic if you dont trust your users.
