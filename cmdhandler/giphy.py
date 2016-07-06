@@ -9,12 +9,15 @@ class giphy:
     def giphy(self, q):
         import json
         import urllib
-        import urllib2
+        import urllib.request
+        import urllib.parse
 
-        data = json.load(urllib2.urlopen("http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=%s" % urllib.quote_plus(q)))
+        url = "http://api.giphy.com/v1/gifs/random?api_key=dc6zaTOxFJmzC&tag=%s" % urllib.parse.quote_plus(q)
+        data = urllib.request.urlopen(url).read().decode("utf-8")
+        output = json.loads(data)
 
-        if len(data["data"]) > 0:
-            return data["data"]["image_original_url"];
+        if len(output["data"]) > 0:
+            return output["data"]["image_original_url"];
 
         return "https://media.giphy.com/media/4SD55a1RnZCdq/giphy.gif"
 
